@@ -14,8 +14,8 @@ function Particle() {
   }
 
   this.follow = function(vectors) {
-    const x = floor(this.pos.x / scale)
-    const y = floor(this.pos.y / scale)
+    const x = floor(this.pos.x / settings.scale)
+    const y = floor(this.pos.y / settings.scale)
     const index = x + y * cols
     const force = vectors[index]
     this.applyForce(force)
@@ -26,7 +26,7 @@ function Particle() {
   }
 
   this.show = function() {
-    stroke(255, 4)
+    stroke('rgba(255,255,255,0.15)')
     line(this.pos.x, this.pos.y, this.prevPos.x, this.prevPos.y)
     this.updatePrev()
   }
