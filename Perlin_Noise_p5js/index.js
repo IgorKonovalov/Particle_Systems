@@ -2,18 +2,19 @@ let zOff = 0
 let particles
 let flowField
 
+
 const settings = {
-  inc: 0.2,
+  inc: 0.05,
   noiseDensity: 1,
   zOffset: 0.004,
   scale: 10,
   magnitude: 4,
   particlesNum: 200,
-  renderBackground: false,
   showField: false,
-  applySeparation: false,
+  renderBackground: true,
+  applySeparation: true,
   maxSpeed: 2,
-  size: 1,
+  size: 31.5,
   fps: 0
 }
 
@@ -23,6 +24,7 @@ let rows
 
 function setup() {
   createCanvas(800, 800)
+  colorMode(HSB, 100)
   particles = []
   cols = floor(width / settings.scale)
   rows = floor(height / settings.scale)
@@ -80,7 +82,7 @@ function draw() {
     particles[i].move(flowField, particles)
     particles[i].update()
     particles[i].edges()
-    particles[i].show()
+    particles[i].show(i)
   }
 
   zOff += zOffset
@@ -135,8 +137,8 @@ const datgui = () => {
     .listen()
 
   guiSettings.add(settings, 'showField', false).onChange(setup)
-  guiSettings.add(settings, 'renderBackground', false).onChange(setup)
-  guiSettings.add(settings, 'applySeparation', false).onChange(setup)
+  guiSettings.add(settings, 'renderBackground', true).onChange(setup)
+  guiSettings.add(settings, 'applySeparation', true).onChange(setup)
 
   gui.add(settings, 'fps').listen()
 

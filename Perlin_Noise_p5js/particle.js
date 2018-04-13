@@ -31,9 +31,8 @@ function Particle() {
   }
 
   this.separate = function(particles) {
-    const desiredSeparation = 100
+    const desiredSeparation = 50
     const steer = createVector(0, 0)
-    let count = 0
 
     particles.forEach(particle => {
       const distance = p5.Vector.dist(this.position, particle.position)
@@ -42,18 +41,11 @@ function Particle() {
         diff.normalize()
         diff.div(distance)
         steer.add(diff)
-        count++
       }
     })
 
-    if (count > 0) {
-      steer.div(count)
-    }
-
-    if (steer.mag() > 0) {
-      steer.normalize()
-      steer.sub(this.vel)
-      steer.limit(this.maxSpeed)
+    if (steer.magSq() > 0) {
+      steer.setMag(2)
     }
 
     return steer
