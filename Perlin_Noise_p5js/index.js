@@ -1,14 +1,15 @@
-const inc = 0.2
-const scale = 10
 let zOff = 0
 let particles
 let flowField
 
 const settings = {
   inc: 0.2,
+  noiseDensity: 1,
+  zOffset: 0.004,
   scale: 10,
   magnitude: 4,
   particlesNum: 500,
+  showField: false,
   fps: 0
 }
 
@@ -17,14 +18,13 @@ let cols
 let rows
 
 function setup() {
-  createCanvas(600, 600)  
+  createCanvas(800, 800)  
   particles = []
   cols = floor(width / settings.scale)
   rows = floor(height / settings.scale)
   
   flowField = new Array(cols, rows)
   
-  // fr = createP('')
   for (let i = 0; i < settings.particlesNum; i++) {
     particles[i] = new Particle()
   }
@@ -32,13 +32,25 @@ function setup() {
 }
 
 function draw() {
+  if (settings.showField) {
+    background(0)
+  }
+
   let yOff = 0
   for (let y = 0; y < rows; y++) {
     let xOff = 0  
     for (let x = 0; x < cols; x++) {
       const index = x + y * cols
-      const angle = noise(xOff, yOff, zOff) * TWO_PI
+      const angle = noise(xOff, yOff, zOff) * TWO_PI * settings.noiseDensity
       const v = p5.Vector.fromAngle(angle)
+      if (settings.showField) {
+        stroke(180)
+        push()
+        translate(x * settings.scale, y * settings.scale)
+        rotate(v.heading())
+        line(0, 0, settings.scale, 0)
+        pop()  
+      }
       v.setMag(settings.magnitude)
       flowField[index] = v
       xOff += settings.inc
@@ -53,9 +65,8 @@ function draw() {
     particles[i].show()
   }
 
-  zOff += 0.004
+  zOff += settings.zOffset
   settings.fps = frameRate()
-  // fr.html(floor(frameRate()))
 }
 
 const datgui = () => {
@@ -76,16 +87,26 @@ const datgui = () => {
     .listen()
 
   guiSettings
-    .add(settings, 'scale', 0, 100)
-    .step(10)
+    .add(settings, 'noiseDensity', 0, 10)
+    .step(0.01)
     .onChange(setup)
     .listen()
-  
+
+  guiSettings
+    .add(settings, 'zOffset', 0, 0.1)
+    .step(0.005)
+    .onChange(setup)
+    .listen()
+
   guiSettings
     .add(settings, 'particlesNum', 100, 2000)
     .step(100)
     .onChange(setup)
     .listen()
+  
+  guiSettings
+    .add(settings, 'showField', false)
+    .onChange(setup)
   
   gui.add(settings, 'fps').listen()
   
