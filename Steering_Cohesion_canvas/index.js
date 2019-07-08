@@ -2,6 +2,8 @@ const canvas = document.getElementById('canvas')
 const cx = canvas.getContext('2d')
 const start = document.getElementById('start')
 
+// temp commit
+
 canvas.width = document.body.offsetWidth
 canvas.height = document.body.offsetHeight
 
